@@ -97,6 +97,13 @@ export function TopBar({ onDownload }: Props) {
               <span>SVG</span>
               <span className="text-[10px] text-neutral-400">Vector</span>
             </button>
+            <button
+              onClick={() => pick('ico')}
+              className="flex w-full items-center justify-between border-t border-neutral-100 px-3 py-2 text-xs font-medium text-neutral-900 hover:bg-neutral-100"
+            >
+              <span>ICO</span>
+              <span className="text-[10px] text-neutral-400">Favicon</span>
+            </button>
           </div>
         )}
       </div>

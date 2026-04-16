@@ -5,6 +5,7 @@ import { TopBar } from './TopBar'
 import { IconPanel } from './IconPanel'
 import { BackgroundPanel } from './BackgroundPanel'
 import { Canvas } from './Canvas'
+import { MyApps } from './MyApps'
 import { downloadLogo, type LogoFormat } from '../utils/download'
 
 const DEFAULT_STATE: LogoState = {
@@ -74,6 +75,7 @@ export function LogoBuilder() {
           <main className="flex-1 overflow-hidden">
             <Canvas ref={canvasRef} />
           </main>
+          <MyApps />
         </div>
       </div>
     </LogoContext.Provider>
