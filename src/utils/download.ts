@@ -3,6 +3,10 @@ import { toPng, toSvg } from 'html-to-image'
 export type LogoFormat = 'png' | 'svg' | 'ico'
 
 const ICO_SIZES = [16, 32, 48, 64, 128, 256]
+const DOWNLOAD_COOLDOWN_MS = 1500
+
+let activeDownload: Promise<void> | null = null
+let lastDownloadAt = 0
 
 function trigger(href: string, filename: string) {
   const link = document.createElement('a')
@@ -75,11 +79,19 @@ async function buildIco(node: HTMLElement): Promise<Blob> {
   return new Blob([buf], { type: 'image/x-icon' })
 }
 
-export async function downloadLogo(
+export function resetDownloadThrottleForTests() {
+  activeDownload = null
+  lastDownloadAt = 0
+}
+
+async function runDownload(
   node: HTMLElement,
   format: LogoFormat,
   basename = 'logopop',
 ) {
+  if (typeof document !== 'undefined' && document.fonts?.ready) {
+    await document.fonts.ready
+  }
   if (format === 'png') {
     const dataUrl = await toPng(node, {
       pixelRatio: 2,
@@ -101,4 +113,28 @@ export async function downloadLogo(
   }
   const dataUrl = await toSvg(node, { cacheBust: true })
   trigger(dataUrl, `${basename}.svg`)
+}
+
+export async function downloadLogo(
+  node: HTMLElement,
+  format: LogoFormat,
+  basename = 'logopop',
+): Promise<boolean> {
+  const now = Date.now()
+  if (activeDownload || now - lastDownloadAt < DOWNLOAD_COOLDOWN_MS) {
+    return false
+  }
+
+  const task = runDownload(node, format, basename)
+  activeDownload = task
+
+  try {
+    await task
+    lastDownloadAt = Date.now()
+    return true
+  } finally {
+    if (activeDownload === task) {
+      activeDownload = null
+    }
+  }
 }

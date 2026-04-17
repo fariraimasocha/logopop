@@ -1,22 +1,35 @@
 import { useRef, useState } from 'react'
 import { Apple } from 'lucide-react'
 import { LogoContext, type LogoState, type ShadowKey } from '../utils/logoState'
+import { DEFAULT_FONT } from '../utils/fonts'
 import { TopBar } from './TopBar'
 import { IconPanel } from './IconPanel'
+import { TextPanel } from './TextPanel'
 import { BackgroundPanel } from './BackgroundPanel'
 import { Canvas } from './Canvas'
 import { MyApps } from './MyApps'
 import { downloadLogo, type LogoFormat } from '../utils/download'
 
+type Tab = 'icon' | 'text' | 'background'
+
 const DEFAULT_STATE: LogoState = {
+  mode: 'icon',
+  customSvg: null,
   iconName: 'Apple',
   Icon: Apple,
   size: 260,
   rotate: 0,
-  borderWidth: 2.3,
+  borderWidth: 20.3,
   borderColor: '#ffffff',
   fillColor: '#ffffff',
   fillOpacity: 0,
+  text: 'Aa',
+  fontFamily: DEFAULT_FONT.family,
+  fontWeight: 700,
+  fontSize: 240,
+  letterSpacing: -4,
+  textColor: '#ffffff',
+  italic: false,
   bgRounded: 96,
   bgPadding: 48,
   bgShadow: 'lg' as ShadowKey,
@@ -29,7 +42,7 @@ const DEFAULT_STATE: LogoState = {
 
 export function LogoBuilder() {
   const [state, setState] = useState<LogoState>(DEFAULT_STATE)
-  const [tab, setTab] = useState<'icon' | 'background'>('icon')
+  const [tab, setTab] = useState<Tab>('icon')
   const canvasRef = useRef<HTMLDivElement>(null)
 
   const ctx = {
@@ -37,6 +50,12 @@ export function LogoBuilder() {
     set: <K extends keyof LogoState>(key: K, value: LogoState[K]) =>
       setState((s) => ({ ...s, [key]: value })),
     reset: () => setState(DEFAULT_STATE),
+  }
+
+  const selectTab = (t: Tab) => {
+    setTab(t)
+    if (t === 'icon') setState((s) => ({ ...s, mode: s.mode === 'text' ? 'icon' : s.mode }))
+    if (t === 'text') setState((s) => ({ ...s, mode: 'text' }))
   }
 
   const handleDownload = (format: LogoFormat) => {
@@ -50,10 +69,10 @@ export function LogoBuilder() {
         <div className="flex flex-1 overflow-hidden">
           <aside className="flex w-[360px] flex-col border-r border-neutral-200 bg-white">
             <div className="flex border-b border-neutral-200">
-              {(['icon', 'background'] as const).map((t) => (
+              {(['icon', 'text', 'background'] as const).map((t) => (
                 <button
                   key={t}
-                  onClick={() => setTab(t)}
+                  onClick={() => selectTab(t)}
                   className={`flex-1 border-b-2 px-4 py-3 text-xs font-semibold capitalize transition ${
                     tab === t
                       ? 'border-neutral-900 text-neutral-900'
@@ -65,7 +84,7 @@ export function LogoBuilder() {
               ))}
             </div>
             <div className="flex-1 overflow-y-auto p-5">
-              {tab === 'icon' ? <IconPanel /> : <BackgroundPanel />}
+              {tab === 'icon' ? <IconPanel /> : tab === 'text' ? <TextPanel /> : <BackgroundPanel />}
             </div>
             <div className="border-t border-neutral-200 p-4 text-[11px] text-neutral-400">
               App by <span className="underline">LogoPop</span> · Icons by{' '}

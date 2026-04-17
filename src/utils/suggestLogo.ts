@@ -81,8 +81,7 @@ export const suggestLogo = createServerFn({ method: 'POST' })
     })
 
     if (!res.ok) {
-      const body = await res.text()
-      throw new Error(`Groq API error ${res.status}: ${body.slice(0, 200)}`)
+      throw new Error(`Groq API request failed with status ${res.status}`)
     }
 
     const json = (await res.json()) as {

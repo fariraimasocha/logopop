@@ -12,7 +12,11 @@ export const SHADOW_CLASS: Record<ShadowKey, string> = {
   '2xl': 'shadow-2xl',
 }
 
+export type LogoMode = 'icon' | 'svg' | 'text'
+
 export type LogoState = {
+  mode: LogoMode
+  customSvg: string | null
   iconName: string
   Icon: LucideIcon
   size: number
@@ -21,6 +25,13 @@ export type LogoState = {
   borderColor: string
   fillColor: string
   fillOpacity: number
+  text: string
+  fontFamily: string
+  fontWeight: number
+  fontSize: number
+  letterSpacing: number
+  textColor: string
+  italic: boolean
   bgRounded: number
   bgPadding: number
   bgShadow: ShadowKey

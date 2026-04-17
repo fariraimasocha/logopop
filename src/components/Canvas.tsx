@@ -1,5 +1,6 @@
 import { forwardRef } from 'react'
 import { useLogo, SHADOW_CLASS } from '../utils/logoState'
+import { CustomSvgIcon } from './CustomSvgIcon'
 
 export const Canvas = forwardRef<HTMLDivElement>(function Canvas(_, ref) {
   const s = useLogo()
@@ -26,15 +27,43 @@ export const Canvas = forwardRef<HTMLDivElement>(function Canvas(_, ref) {
           background,
         }}
       >
-        <s.Icon
-          size={s.size}
-          strokeWidth={s.borderWidth}
-          color={s.borderColor}
-          fill={s.fillColor}
-          fillOpacity={s.fillOpacity / 100}
-          style={{ transform: `rotate(${s.rotate}deg)` }}
-          absoluteStrokeWidth
-        />
+        {s.mode === 'svg' && s.customSvg ? (
+          <CustomSvgIcon
+            markup={s.customSvg}
+            size={s.size}
+            strokeWidth={s.borderWidth}
+            color={s.borderColor}
+            fillOpacity={s.fillOpacity / 100}
+            rotate={s.rotate}
+          />
+        ) : s.mode === 'text' ? (
+          <span
+            style={{
+              fontFamily: s.fontFamily,
+              fontWeight: s.fontWeight,
+              fontSize: s.fontSize,
+              letterSpacing: s.letterSpacing,
+              fontStyle: s.italic ? 'italic' : 'normal',
+              color: s.textColor,
+              lineHeight: 1,
+              whiteSpace: 'pre',
+              transform: `rotate(${s.rotate}deg)`,
+              display: 'inline-block',
+            }}
+          >
+            {s.text || ' '}
+          </span>
+        ) : (
+          <s.Icon
+            size={s.size}
+            strokeWidth={s.borderWidth}
+            color={s.borderColor}
+            fill={s.fillColor}
+            fillOpacity={s.fillOpacity / 100}
+            style={{ transform: `rotate(${s.rotate}deg)` }}
+            absoluteStrokeWidth
+          />
+        )}
       </div>
     </div>
   )
