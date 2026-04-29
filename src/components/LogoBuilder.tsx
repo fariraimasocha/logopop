@@ -66,9 +66,12 @@ export function LogoBuilder() {
     <LogoContext.Provider value={ctx}>
       <div className="flex h-screen flex-col bg-neutral-50">
         <TopBar onDownload={handleDownload} />
-        <div className="flex flex-1 overflow-hidden">
-          <aside className="flex w-[360px] flex-col border-r border-neutral-200 bg-white">
-            <div className="flex border-b border-neutral-200">
+        <div className="flex flex-1 flex-col overflow-hidden md:flex-row">
+          <main className="h-52 shrink-0 overflow-hidden md:h-auto md:flex-1">
+            <Canvas ref={canvasRef} />
+          </main>
+          <aside className="flex min-h-0 flex-1 flex-col border-t border-neutral-200 bg-white md:order-first md:w-[360px] md:flex-none md:border-r md:border-t-0">
+            <div className="flex shrink-0 border-b border-neutral-200">
               {(['icon', 'text', 'background'] as const).map((t) => (
                 <button
                   key={t}
@@ -86,14 +89,11 @@ export function LogoBuilder() {
             <div className="flex-1 overflow-y-auto p-5">
               {tab === 'icon' ? <IconPanel /> : tab === 'text' ? <TextPanel /> : <BackgroundPanel />}
             </div>
-            <div className="border-t border-neutral-200 p-4 text-[11px] text-neutral-400">
+            <div className="shrink-0 border-t border-neutral-200 p-4 text-[11px] text-neutral-400">
               App by <span className="underline">LogoPop</span> · Icons by{' '}
               <span className="underline">Lucide</span>
             </div>
           </aside>
-          <main className="flex-1 overflow-hidden">
-            <Canvas ref={canvasRef} />
-          </main>
           <MyApps />
         </div>
       </div>

@@ -32,7 +32,7 @@ export function TopBar({ onDownload }: Props) {
         </div>
         <span className="text-sm font-semibold text-neutral-900">LogoPop</span>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 md:gap-4">
         <div className="flex gap-1">
           <button
             onClick={s.reset}
@@ -45,7 +45,7 @@ export function TopBar({ onDownload }: Props) {
             <Redo2 size={16} />
           </button>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="hidden items-center gap-1 sm:flex">
           <span className="mr-1 text-xs font-medium text-neutral-500">Presets</span>
           {PRESETS.map((p) => (
             <button
