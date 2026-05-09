@@ -8,7 +8,7 @@ import { TextPanel } from './TextPanel'
 import { BackgroundPanel } from './BackgroundPanel'
 import { Canvas } from './Canvas'
 import { MyApps } from './MyApps'
-import { downloadLogo, type LogoFormat } from '../utils/download'
+import { downloadLogo, downloadAllAsZip, type LogoFormat } from '../utils/download'
 
 type Tab = 'icon' | 'text' | 'background'
 
@@ -62,10 +62,14 @@ export function LogoBuilder() {
     if (canvasRef.current) void downloadLogo(canvasRef.current, format)
   }
 
+  const handleDownloadAll = () => {
+    if (canvasRef.current) void downloadAllAsZip(canvasRef.current)
+  }
+
   return (
     <LogoContext.Provider value={ctx}>
       <div className="flex h-screen flex-col bg-neutral-50">
-        <TopBar onDownload={handleDownload} />
+        <TopBar onDownload={handleDownload} onDownloadAll={handleDownloadAll} />
         <div className="flex flex-1 flex-col overflow-hidden md:flex-row">
           <main className="h-52 shrink-0 overflow-hidden md:h-auto md:flex-1">
             <Canvas ref={canvasRef} />

@@ -1,4 +1,5 @@
 import { toPng, toSvg } from 'html-to-image'
+import { zipSync } from 'fflate'
 
 export type LogoFormat = 'png' | 'svg' | 'ico'
 
@@ -111,6 +112,60 @@ async function runDownload(
   }
   const dataUrl = await toSvg(node, { cacheBust: true })
   trigger(dataUrl, `${basename}.svg`)
+}
+
+function dataUrlToBytes(dataUrl: string): Uint8Array {
+  const base64 = dataUrl.split(',')[1]
+  const binary = atob(base64)
+  const bytes = new Uint8Array(binary.length)
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i)
+  return bytes
+}
+
+export async function downloadAllAsZip(
+  node: HTMLElement,
+  basename = 'logopop',
+): Promise<boolean> {
+  const now = Date.now()
+  if (activeDownload || now - lastDownloadAt < DOWNLOAD_COOLDOWN_MS) return false
+
+  const task = (async () => {
+    if (typeof document !== 'undefined' && document.fonts?.ready) {
+      await document.fonts.ready
+    }
+
+    const [pngUrl, svgUrl, icoBlob] = await Promise.all([
+      toPng(node, { pixelRatio: 2, cacheBust: true }),
+      toSvg(node, { cacheBust: true }),
+      buildIco(node),
+    ])
+
+    const svgText = decodeURIComponent(svgUrl.split(',')[1])
+    const icoBytes = new Uint8Array(await icoBlob.arrayBuffer())
+
+    const zip = zipSync({
+      [`${basename}.png`]: dataUrlToBytes(pngUrl),
+      [`${basename}.svg`]: new TextEncoder().encode(svgText),
+      'favicon.ico': icoBytes,
+    })
+
+    const blob = new Blob([zip.buffer as ArrayBuffer], { type: 'application/zip' })
+    const url = URL.createObjectURL(blob)
+    try {
+      trigger(url, `${basename}.zip`)
+    } finally {
+      setTimeout(() => URL.revokeObjectURL(url), 1000)
+    }
+  })()
+
+  activeDownload = task
+  try {
+    await task
+    lastDownloadAt = Date.now()
+    return true
+  } finally {
+    if (activeDownload === task) activeDownload = null
+  }
 }
 
 export async function downloadLogo(

@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import { ChevronDown, Download, Flame, Undo2, Redo2 } from 'lucide-react'
+import { ChevronDown, Download, FolderDown, Flame, Undo2, Redo2 } from 'lucide-react'
 import { useLogo } from '../utils/logoState'
 import { PRESETS } from '../utils/icons'
 import type { LogoFormat } from '../utils/download'
 
-type Props = { onDownload: (format: LogoFormat) => void }
+type Props = { onDownload: (format: LogoFormat) => void; onDownloadAll: () => void }
 
-export function TopBar({ onDownload }: Props) {
+export function TopBar({ onDownload, onDownloadAll }: Props) {
   const s = useLogo()
   const [open, setOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -23,6 +23,11 @@ export function TopBar({ onDownload }: Props) {
   const pick = (format: LogoFormat) => {
     setOpen(false)
     onDownload(format)
+  }
+
+  const pickAll = () => {
+    setOpen(false)
+    onDownloadAll()
   }
   return (
     <header className="flex h-14 items-center justify-between border-b border-neutral-200 bg-white px-4 text-neutral-900">
@@ -103,6 +108,16 @@ export function TopBar({ onDownload }: Props) {
             >
               <span>ICO</span>
               <span className="text-[10px] text-neutral-400">Favicon</span>
+            </button>
+            <button
+              onClick={pickAll}
+              className="flex w-full items-center justify-between border-t-2 border-neutral-200 bg-neutral-50 px-3 py-2 text-xs font-semibold text-neutral-900 hover:bg-neutral-100"
+            >
+              <span className="flex items-center gap-1.5">
+                <FolderDown size={12} />
+                All formats
+              </span>
+              <span className="text-[10px] text-neutral-400">ZIP</span>
             </button>
           </div>
         )}
