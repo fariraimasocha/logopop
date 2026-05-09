@@ -28,7 +28,6 @@ async function buildIco(node: HTMLElement): Promise<Blob> {
   const sourceUrl = await toPng(node, {
     pixelRatio: 2,
     cacheBust: true,
-    backgroundColor: 'transparent',
   })
   const img = await loadImage(sourceUrl)
 
@@ -96,7 +95,6 @@ async function runDownload(
     const dataUrl = await toPng(node, {
       pixelRatio: 2,
       cacheBust: true,
-      backgroundColor: 'transparent',
     })
     trigger(dataUrl, `${basename}.png`)
     return
