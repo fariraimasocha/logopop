@@ -7,7 +7,7 @@ import appCss from '../styles.css?url'
 const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getItem('theme');var mode=(stored==='light'||stored==='dark'||stored==='auto')?stored:'auto';var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=mode==='auto'?(prefersDark?'dark':'light'):mode;var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(resolved);if(mode==='auto'){root.removeAttribute('data-theme')}else{root.setAttribute('data-theme',mode)}root.style.colorScheme=resolved;}catch(e){}})();`
 
 const SITE_URL = 'https://logopop.fariraimasocha.co.zw'
-const OG_IMAGE = `${SITE_URL}/logopop.png`
+const OG_IMAGE = `${SITE_URL}/og-image.png`
 const TITLE = 'LogoPop — craft pixel-perfect logos in seconds'
 const DESCRIPTION =
   'LogoPop is a fast, in-browser logo builder. Pick an icon, tune gradients and shadows, then export crisp PNG, SVG, or favicon-ready ICO.'
@@ -30,8 +30,8 @@ export const Route = createRootRoute({
       { property: 'og:image', content: OG_IMAGE },
       { property: 'og:image:secure_url', content: OG_IMAGE },
       { property: 'og:image:type', content: 'image/png' },
-      { property: 'og:image:width', content: '3024' },
-      { property: 'og:image:height', content: '1714' },
+      { property: 'og:image:width', content: '1200' },
+      { property: 'og:image:height', content: '630' },
       { property: 'og:image:alt', content: 'LogoPop — craft pixel-perfect logos in seconds' },
       { name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:site', content: '@fariraijames' },
