@@ -9,7 +9,17 @@ import tailwindcss from '@tailwindcss/vite'
 
 const config = defineConfig({
   resolve: { tsconfigPaths: true },
-  plugins: [devtools(), tailwindcss(), tanstackStart(), nitro(), viteReact()],
+  plugins: [
+    devtools(),
+    tailwindcss(),
+    tanstackStart(),
+    nitro({
+      compatibilityDate: '2025-03-25',
+      preset: 'cloudflare_module',
+      cloudflare: { nodeCompat: true },
+    }),
+    viteReact(),
+  ],
 })
 
 export default config
